@@ -22,6 +22,13 @@
 		wrongAnswer = false;
 	}
 
+	function handleWrongAnswer() {
+		saveHightScore(points);
+		points = 0;
+		wrongAnswer = true;
+		setTimeout(resetAnswer, TIMEOUT_DURATION);
+	}
+
 	function checkAnswer() {
 		if (answer === '') return;
 		if (answer.toLowerCase() === currentKanaKey) {
@@ -29,10 +36,22 @@
 			currentKanaKey = getRandomKanaKey();
 			resetAnswer();
 		} else {
-			points = 0;
-			wrongAnswer = true;
-			setTimeout(resetAnswer, TIMEOUT_DURATION);
+			handleWrongAnswer();
 		}
+	}
+	// HighScores
+	let highScores: HighScore[] = $state([]);
+
+	class HighScore {
+		points: number = $state(0);
+		constructor(points: number) {
+			this.points = points;
+		}
+	}
+	function saveHightScore(points: number) {
+		highScores = [...highScores, new HighScore(points)]
+			.sort((a, b) => b.points - a.points)
+			.slice(0, 5);
 	}
 </script>
 
@@ -48,9 +67,23 @@
 	<button on:click={checkAnswer}>Submit</button>
 </div>
 
-<div class="kana-infos">
+<div class="kana-infos container">
 	<button class:active={hiragana} on:click={() => (hiragana = true)}>Hiragana</button>
 	<button class:active={!hiragana} on:click={() => (hiragana = false)}>Katakana</button>
+</div>
+
+<!-- HighScore of the player -->
+<div class="container">
+	<h2>HighScores</h2>
+	{#if highScores.length > 0}
+		<ul>
+			{#each highScores as score}
+				<li>{score.points}</li>
+			{/each}
+		</ul>
+	{:else}
+		<p>No highscore yet</p>
+	{/if}
 </div>
 
 <style>
@@ -71,7 +104,7 @@
 	}
 
 	.wrong_answer {
-		background-color: #ff5d5d !important;
+		background-color: #ff5d5d;
 	}
 
 	.kana-display {
@@ -108,20 +141,6 @@
 		margin-bottom: 1rem; /* Espacement entre les points et le cadre */
 	}
 
-	.kana-infos {
-		background-color: #f5f5f5;
-		padding: 2rem;
-		border-radius: 10px;
-		width: 150px;
-		height: 75px;
-		margin: auto;
-		margin-bottom: 1rem; /* Ajout d'un espace en dessous du cadre pour les points */
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
 	.kana-infos button {
 		border: none;
 		padding: 0.5em 1em;

@@ -21,7 +21,7 @@
 		answer = '';
 		wrongAnswer = false;
 	}
-  
+
 	function checkAnswer() {
 		if (answer === '') return;
 		if (answer.toLowerCase() === currentKanaKey) {

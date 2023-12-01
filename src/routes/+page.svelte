@@ -23,8 +23,6 @@
 		wrongAnswer = false;
 	}
 
-<<<<<<< Updated upstream
-=======
 	function handleWrongAnswer() {
 		saveHighScore(points);
 		points = 0;
@@ -32,7 +30,6 @@
 		setTimeout(resetAnswer, TIMEOUT_DURATION);
 	}
 
->>>>>>> Stashed changes
 	function checkAnswer() {
 		if (answer === '') return;
 		if (answer.toLowerCase() === currentKanaKey) {
@@ -45,8 +42,6 @@
 			setTimeout(resetAnswer, TIMEOUT_DURATION);
 		}
 	}
-<<<<<<< Updated upstream
-=======
 	// HighScores
 	let highScores: HighScore[] = $state([]);
 	class HighScore {
@@ -95,7 +90,6 @@
   	}
 
 	let name: string = $state('');
->>>>>>> Stashed changes
 </script>
 
 <!-- Display the points and the current kana -->
@@ -111,18 +105,12 @@
 	<button on:click={checkAnswer}>Submit</button>
 </div>
 
-<<<<<<< Updated upstream
-<div class="kana-infos">
-=======
 <!-- Switch between Hiragana and Katakana -->
 <div class="kana-infos container">
->>>>>>> Stashed changes
 	<button class:active={hiragana} on:click={() => (hiragana = true)}>Hiragana</button>
 	<button class:active={!hiragana} on:click={() => (hiragana = false)}>Katakana</button>
 </div>
 
-<<<<<<< Updated upstream
-=======
 <!-- HighScore of the player -->
 <div class="container">
 	<h2>HighScores</h2>
@@ -144,7 +132,6 @@
 	<input type="text" id="name" bind:value={name} />
 </div>
 
->>>>>>> Stashed changes
 <style>
 	.container {
 		background-color: #f5f5f5;

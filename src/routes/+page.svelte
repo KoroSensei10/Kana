@@ -39,6 +39,7 @@
 		} else {
 			points = 0;
 			wrongAnswer = true;
+			handleWrongAnswer();
 			setTimeout(resetAnswer, TIMEOUT_DURATION);
 		}
 	}

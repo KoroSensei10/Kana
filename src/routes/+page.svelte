@@ -1,5 +1,6 @@
 <script lang="ts">
 	import kana from '$lib/kana';
+	import { onMount } from 'svelte';
 
 	const TIMEOUT_DURATION = 800;
 	let points: number = $state(0);
@@ -22,6 +23,16 @@
 		wrongAnswer = false;
 	}
 
+<<<<<<< Updated upstream
+=======
+	function handleWrongAnswer() {
+		saveHighScore(points);
+		points = 0;
+		wrongAnswer = true;
+		setTimeout(resetAnswer, TIMEOUT_DURATION);
+	}
+
+>>>>>>> Stashed changes
 	function checkAnswer() {
 		if (answer === '') return;
 		if (answer.toLowerCase() === currentKanaKey) {
@@ -34,8 +45,60 @@
 			setTimeout(resetAnswer, TIMEOUT_DURATION);
 		}
 	}
+<<<<<<< Updated upstream
+=======
+	// HighScores
+	let highScores: HighScore[] = $state([]);
+	class HighScore {
+		points: number = $state(0);
+		constructor(points: number) {
+			this.points = points;
+		}
+	}
+	function saveHighScore(points: number) {
+		highScores = [...highScores, new HighScore(points)]
+			.sort((a, b) => b.points - a.points)
+			.slice(0, 5);
+	}
+	$effect(() => {
+		if (highScores.length === 0) return;
+		localStorage.setItem('highScores', highScores.map((score) => score.points).toString());
+	});
+
+	onMount(() => {
+		const highScoresString = localStorage.getItem('highScores');
+		if (highScoresString) {
+			const highScoresArray = highScoresString.split(',').map((score) => parseInt(score));
+			highScores = highScoresArray.map((score) => new HighScore(score));
+		}
+	});
+
+	// store in the Database
+	async function addScore() {
+		if (highScores.length === 0) return;
+		if (name === '') return;
+		const score = highScores[0].points;
+		const response = await fetch('/addScore', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ name: name, score: score }),
+		});
+
+		const data = await response.json();
+		if (response.ok) {
+			console.log('Score ajouté:', data);
+		} else {
+			console.error('Erreur:', data.error);
+    	}
+  	}
+
+	let name: string = $state('');
+>>>>>>> Stashed changes
 </script>
 
+<!-- Display the points and the current kana -->
 <div class="points-display">Points: {points}</div>
 <div class:wrong_answer={wrongAnswer} class="container">
 	<label for="kana-display" class="kana-display">{currentKanaDisplay}</label>
@@ -48,11 +111,40 @@
 	<button on:click={checkAnswer}>Submit</button>
 </div>
 
+<<<<<<< Updated upstream
 <div class="kana-infos">
+=======
+<!-- Switch between Hiragana and Katakana -->
+<div class="kana-infos container">
+>>>>>>> Stashed changes
 	<button class:active={hiragana} on:click={() => (hiragana = true)}>Hiragana</button>
 	<button class:active={!hiragana} on:click={() => (hiragana = false)}>Katakana</button>
 </div>
 
+<<<<<<< Updated upstream
+=======
+<!-- HighScore of the player -->
+<div class="container">
+	<h2>HighScores</h2>
+	{#if highScores.length > 0}
+		<ul>
+			{#each highScores as score}
+				<li>{score.points}</li>
+			{/each}
+		</ul>
+	{:else}
+		<p>No highscore yet</p>
+	{/if}
+</div>
+
+<!-- Add the score to the database -->
+<div class="container">
+	<button on:click={() => addScore()}>Add score to the database</button>
+	<label for="name">Name:</label>
+	<input type="text" id="name" bind:value={name} />
+</div>
+
+>>>>>>> Stashed changes
 <style>
 	.container {
 		background-color: #f5f5f5;

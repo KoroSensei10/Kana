@@ -37,9 +37,9 @@
 			currentKanaKey = getRandomKanaKey();
 			resetAnswer();
 		} else {
+			handleWrongAnswer();
 			points = 0;
 			wrongAnswer = true;
-			handleWrongAnswer();
 			setTimeout(resetAnswer, TIMEOUT_DURATION);
 		}
 	}
@@ -69,28 +69,6 @@
 		}
 	});
 
-	// store in the Database
-	async function addScore() {
-		if (highScores.length === 0) return;
-		if (name === '') return;
-		const score = highScores[0].points;
-		const response = await fetch('/addScore', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ name: name, score: score }),
-		});
-
-		const data = await response.json();
-		if (response.ok) {
-			console.log('Score ajouté:', data);
-		} else {
-			console.error('Erreur:', data.error);
-    	}
-  	}
-
-	let name: string = $state('');
 </script>
 
 <!-- Display the points and the current kana -->
@@ -124,13 +102,6 @@
 	{:else}
 		<p>No highscore yet</p>
 	{/if}
-</div>
-
-<!-- Add the score to the database -->
-<div class="container">
-	<button on:click={() => addScore()}>Add score to the database</button>
-	<label for="name">Name:</label>
-	<input type="text" id="name" bind:value={name} />
 </div>
 
 <style>
